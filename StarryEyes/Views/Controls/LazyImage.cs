@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -14,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using StarryEyes.Annotations;
+using StarryEyes.Settings;
 
 namespace StarryEyes.Views.Controls
 {
@@ -189,7 +192,25 @@ namespace StarryEyes.Views.Controls
 
         private static async Task LoadBytes(Uri source, Subject<byte[]> subject)
         {
-            var client = new HttpClient();
+            var handler = new HttpClientHandler();
+            if (Setting.WebProxy.Value == WebProxyConfiguration.Custom
+                && handler.SupportsProxy)
+            {
+                handler.Proxy = Setting.ExplicitSetProxyAccount.Value
+                    ? new WebProxy(
+                        new Uri("http://" + Setting.WebProxyHost.Value + ":" +
+                                Setting.WebProxyPort.Value.ToString(CultureInfo.InvariantCulture)),
+                            Setting.BypassWebProxyInLocal.Value,
+                            Setting.WebProxyBypassList.Value,
+                            new NetworkCredential(Setting.WebProxyAccount.Value, Setting.WebProxyPassword.Value))
+                    : new WebProxy(
+                        new Uri("http://" + Setting.WebProxyHost.Value + ":" +
+                                Setting.WebProxyPort.Value.ToString(CultureInfo.InvariantCulture)),
+                            Setting.BypassWebProxyInLocal.Value,
+                            Setting.WebProxyBypassList.Value);
+            }
+
+            var client = new HttpClient(handler);
             try
             {
                 byte[] result;

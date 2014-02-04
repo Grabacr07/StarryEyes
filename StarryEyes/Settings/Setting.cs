@@ -214,6 +214,15 @@ namespace StarryEyes.Settings
         public static readonly SettingItemStruct<int> WebProxyPort =
             new SettingItemStruct<int>("WebProxyPort", 0);
 
+        public static readonly SettingItemStruct<bool> ExplicitSetProxyAccount =
+            new SettingItemStruct<bool>("ExplicitSetProxyAccount", false);
+
+        public static readonly SettingItem<string> WebProxyAccount =
+            new SettingItem<string>("WebProxyAccount", String.Empty);
+
+        public static readonly SettingItem<string> WebProxyPassword =
+            new SettingItem<string>("WebProxyPassword", String.Empty);
+
         public static readonly SettingItemStruct<bool> BypassWebProxyInLocal =
             new SettingItemStruct<bool>("BypassWebProxyInLocal", false);
 

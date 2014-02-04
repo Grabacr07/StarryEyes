@@ -846,6 +846,24 @@ namespace StarryEyes.ViewModels.WindowParts.Flips
             set { Setting.WebProxyPort.Value = value; }
         }
 
+        public bool ExplicitSetProxyAccount
+        {
+            get { return Setting.ExplicitSetProxyAccount.Value; }
+            set { Setting.ExplicitSetProxyAccount.Value = value; }
+        }
+
+        public string WebProxyAccount
+        {
+            get { return Setting.WebProxyAccount.Value; }
+            set { Setting.WebProxyAccount.Value = value; }
+        }
+
+        public string WebProxyPassword
+        {
+            get { return Setting.WebProxyPassword.Value; }
+            set { Setting.WebProxyPassword.Value = value; }
+        }
+
         public bool BypassProxyInLocal
         {
             get { return Setting.BypassWebProxyInLocal.Value; }
