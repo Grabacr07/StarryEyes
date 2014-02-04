@@ -15,9 +15,14 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+<<<<<<< HEAD
 using JetBrains.Annotations;
+
+=======
+using StarryEyes.Annotations;
 using StarryEyes.Settings;
 
+>>>>>>> Add a proxy credentials support.
 namespace StarryEyes.Views.Controls
 {
     public class LazyImage : Image
@@ -192,7 +197,7 @@ namespace StarryEyes.Views.Controls
         private static async Task LoadBytes(Uri source, Subject<byte[]> subject)
         {
             var handler = new HttpClientHandler();
-            if (Setting.WebProxyType.Value == WebProxyConfiguration.Custom
+            if (Setting.WebProxy.Value == WebProxyConfiguration.Custom
                 && handler.SupportsProxy)
             {
                 handler.Proxy = Setting.ExplicitSetProxyAccount.Value
@@ -256,6 +261,10 @@ namespace StarryEyes.Views.Controls
             }
             catch (Exception ex)
             {
+                lock (_imageObservables)
+                {
+                    _imageObservables.Remove(source);
+                }
                 subject.OnError(ex);
                 subject.Dispose();
             }
@@ -289,6 +298,7 @@ namespace StarryEyes.Views.Controls
 
         private static void RunNextDecodeTask()
         {
+            // uri, LazyImage, dpw, dph
             Tuple<Uri, LazyImage, byte[], int, int> item;
             if (!_decodeStack.TryPop(out item))
             {
@@ -300,7 +310,7 @@ namespace StarryEyes.Views.Controls
                 {
                     var b = CreateImage(item.Item3, item.Item4, item.Item5);
                     DispatcherHolder.Enqueue(() => SetImage(item.Item2, b, item.Item1),
-                        DispatcherPriority.Loaded);
+                        DispatcherPriority.Background);
                 }).ContinueWith(_ => RunNextDecodeTask());
             }
         }
@@ -319,7 +329,6 @@ namespace StarryEyes.Views.Controls
             var uri = img.UriSource;
             var dpw = img.DecodePixelWidth;
             var dph = img.DecodePixelHeight;
-            System.Diagnostics.Debug.WriteLine("IMAGE DECODE:: URI:" + uri + " / DPW:" + dpw + " / DPH:" + dph + " / NVAL:" + e.NewValue);
             SetImage(img, null, null);
             if (uri != null)
             {

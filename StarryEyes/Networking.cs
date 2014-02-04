@@ -39,7 +39,14 @@ namespace StarryEyes
                     try
                     {
                         Anomaly.Core.ProxyProvider =
-                            () => new WebProxy(
+                            () => Setting.ExplicitSetProxyAccount.Value
+                                ? new WebProxy(
+                                      new Uri("http://" + Setting.WebProxyHost.Value + ":" +
+                                              Setting.WebProxyPort.Value.ToString(CultureInfo.InvariantCulture)),
+                                      Setting.BypassWebProxyInLocal.Value,
+                                      Setting.WebProxyBypassList.Value,
+                                      new NetworkCredential(Setting.WebProxyAccount.Value, Setting.WebProxyPassword.Value))
+                                : new WebProxy(
                                       new Uri("http://" + Setting.WebProxyHost.Value + ":" +
                                               Setting.WebProxyPort.Value.ToString(CultureInfo.InvariantCulture)),
                                       Setting.BypassWebProxyInLocal.Value,

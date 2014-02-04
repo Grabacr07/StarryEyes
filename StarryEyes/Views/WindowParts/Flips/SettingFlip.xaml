@@ -924,6 +924,32 @@
                                                Text="ポート: " />
                                     <TextBox VerticalAlignment="Center" Text="{Binding WebProxyHost}" />
                                 </DockPanel>
+                                <DockPanel>
+                                    <CheckBox x:Name="ExplicitProxyAccount" 
+                                              Content="プロキシ アカウントを指定する"
+                                              IsChecked="{Binding ExplicitSetProxyAccount}"
+                                              Margin="0,0,20,0" />
+                                    <StackPanel Orientation="Horizontal"
+                                                IsEnabled="{Binding ElementName=ExplicitProxyAccount, Path=IsChecked}">
+                                        <TextBlock VerticalAlignment="Center" 
+                                                   Text="アカウント: " />
+                                        <TextBox Width="200" 
+                                                 VerticalAlignment="Center" 
+                                                 Text="{Binding WebProxyAccount}"
+                                                 Margin="0,0,20,0" />
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Text="パスワード: " />
+                                        <PasswordBox Width="200" 
+                                                     VerticalAlignment="Center">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="PasswordChanged">
+                                                    <l:PasswordBoxSetStateToSourceAction Property="Password"
+                                                                                         Source="{Binding WebProxyPassword}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </PasswordBox>
+                                    </StackPanel>
+                                </DockPanel>
                                 <CheckBox Margin="0,4"
                                           Content="ローカルホストを参照するときには使用しない(_B)"
                                           IsChecked="{Binding BypassProxyInLocal}" />
